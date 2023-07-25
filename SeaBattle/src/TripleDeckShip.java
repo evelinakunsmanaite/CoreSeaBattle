@@ -1,3 +1,5 @@
+import java.util.regex.Pattern;
+
 public class TripleDeckShip extends Ships{
     private int x1, y1, x2, y2, x3, y3;
 
@@ -33,4 +35,5 @@ public class TripleDeckShip extends Ships{
     public int getY3() {
         return y3;
     }
+
 }

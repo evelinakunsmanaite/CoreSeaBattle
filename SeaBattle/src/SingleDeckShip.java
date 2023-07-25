@@ -1,3 +1,5 @@
+import java.util.regex.Pattern;
+
 public class SingleDeckShip extends Ships{
     private int x, y;
     //абстрактный класс должен содержать getIcon
