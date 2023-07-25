@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.regex.Pattern;
 
 public abstract class Ships {
@@ -27,10 +28,16 @@ public abstract class Ships {
             default -> throw new IllegalStateException("Unexpected value: " + ship);// моя ошибка
         }
         Pattern pattern = Pattern.compile(regex);
-        if (!pattern.matcher(str).find()) {
+        if (!pattern.matcher(str).matches()) {
             System.out.println("error");
             return false;
         } else return true;
-
     }
+
+    abstract int[][] getCoordinate();
+
+    abstract void setArea();
+
+    abstract List<int[]> getArea();
+
 }

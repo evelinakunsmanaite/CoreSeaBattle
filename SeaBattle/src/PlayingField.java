@@ -2,13 +2,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class PlayingField {
-    Scanner scanner;
-    private int count = 0;
-    static String[][] playingField = new String[10][10];
+    static Scanner scanner;
+    private static int count = 0;
+    private static String[][] playingField = new String[10][10];
+    private static SingleDeckShip singleDeckShip;
+    private static DoubleDeckShip doubleDeckShip;
+    private static TripleDeckShip tripleDeckShip;
+    private static QuadDeckShip quadDeckShip;
 
     public static void playingFieldCreator() {
         for (int i = 0; i < playingField.length; i++) {
@@ -19,9 +22,10 @@ public class PlayingField {
             System.out.println();
         }
         System.out.println("Поздравляю, ваше поле создано! Теперь давай его заполним)");
+        addSingleDeckShip();
     }
 
-    private void getPlayingField(String[][] playingField) {
+    private static void getPlayingField(String[][] playingField) {
         for (String[] strings : playingField) {
             for (String string : strings) {
                 System.out.print(string + "  ");
@@ -30,7 +34,8 @@ public class PlayingField {
         }
     }
 
-    private void addSingleDeckShip() {
+
+    private static void addSingleDeckShip() {
         while (count < 4) {
             scanner = new Scanner(System.in);
             switch (count) {
@@ -41,19 +46,41 @@ public class PlayingField {
                 default -> System.out.println("Количество однопалубных кораблей должно быть 4");
             }
             String str = scanner.next();
-            // метод проверки строки через регекс
-            if (Ships.regexMatching(str,1)) {
+
+            if (Ships.regexMatching(str, 1)) {
                 String[] coordinates = str.split(",");
-                //проверка добавления
-                count++;
+                int x = Integer.parseInt(coordinates[0]);
+                int y = Integer.parseInt(coordinates[1]);
+
+                if (playingField[x][y].contains(Ships.getDefaultValue())) {
+                    singleDeckShip = new SingleDeckShip(x, y);
+                    shipAdder(singleDeckShip);
+                    count++;
+                } else {
+                    System.out.println("error");// error
+                    addSingleDeckShip();
+                }
             } else {
                 addSingleDeckShip();
             }
         }
         count = 0;
+        getPlayingField(playingField);
     }
 
+    private static void shipAdder(Ships ship) {
+        for (int[] coordinate : ship.getCoordinate()) {
+            int x = coordinate[0];
+            int y = coordinate[1];
+            playingField[x][y] = Ships.getShipValue();
 
+            for (int[] area : ship.getArea()) {
+                int areaX = area[0];
+                int areaY = area[1];
+                playingField[areaX][areaY] = Ships.getArealValue();
+            }
+        }
+    }
 
 //    private int addSingleDeckShip(String[][] playingField) {
 //        scanner = new Scanner(System.in);
