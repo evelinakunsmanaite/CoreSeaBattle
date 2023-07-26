@@ -13,6 +13,7 @@ public class TripleDeckShip extends Ships {
         this.x3 = x3;
         this.y3 = y3;
         tripleDeckShipArray = new int[][]{{x1, y1}, {x2, y2}, {x3, y3}};
+        setArea();
     }
 
     public int getX1() {
@@ -46,7 +47,6 @@ public class TripleDeckShip extends Ships {
 
     public void setArea() {
         areaList = new ArrayList<>();
-
         for (int[] coordinate : tripleDeckShipArray) {
             int x = coordinate[0];
             int y = coordinate[1];

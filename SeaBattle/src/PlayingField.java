@@ -29,6 +29,8 @@ public class PlayingField {
         System.out.println("Поздравляю, ваше поле создано! Теперь давай его заполним)");
         addSingleDeckShip();
         addDoubleDeckShip();
+        addTripleDeckShip();
+        addQuadDeckShip();
     }
 
     private static void getPlayingField(String[][] playingField) {
@@ -64,12 +66,7 @@ public class PlayingField {
                     singleDeckShip = new SingleDeckShip(x, y);
                     shipAdder(singleDeckShip);
                     count++;
-                } else {
-                    System.out.println("error");// error
-                    addSingleDeckShip();
                 }
-            } else {
-                addSingleDeckShip();
             }
         }
         count = 0;
@@ -83,7 +80,7 @@ public class PlayingField {
                 case 0 -> System.out.println("Введите координаты первого двухпалубного корабля: ");
                 case 1 -> System.out.println("Введите координаты второго двухпалубного корабля: ");
                 case 2 -> System.out.println("Введите координаты третьего двухпалубного корабля: ");
-                default -> System.out.println("Количество однопалубных кораблей должно быть 4");
+                default -> System.out.println("Количество однопалубных кораблей должно быть 3");
             }
             String str = scanner.next();
             if (Ships.regexMatching(str, 2)) {
@@ -96,18 +93,86 @@ public class PlayingField {
                     coordinate.add(Integer.parseInt(array[1]));
                 }
                 if (creatorArrays(coordinate)) {
-                    doubleDeckShip = new DoubleDeckShip(coordinate.get(0), coordinate.get(1), coordinate.get(2), coordinate.get(3));
-                    shipAdder(doubleDeckShip);
+                    if (playingField[coordinate.get(0)][coordinate.get(1)].contains(Ships.getDefaultValue()) &&
+                            playingField[coordinate.get(2)][coordinate.get(3)].contains(Ships.getDefaultValue())) {
+                        doubleDeckShip = new DoubleDeckShip(coordinate.get(0), coordinate.get(1), coordinate.get(2), coordinate.get(3));
+                        shipAdder(doubleDeckShip);
 
-                    count++;
-                } else addDoubleDeckShip();
-
-            } else addDoubleDeckShip();
+                        count++;
+                    }
+                }
+            }
         }
         count = 0;
         getPlayingField(playingField);
     }
 
+    private static void addTripleDeckShip() {
+        while (count < 2) {
+            scanner = new Scanner(System.in);
+            switch (count) {
+                case 0 -> System.out.println("Введите координаты первого трёхпалубного корабля: ");
+                case 1 -> System.out.println("Введите координаты второго трёхпалубного корабля: ");
+                default -> System.out.println("Количество однопалубных кораблей должно быть 2");
+            }
+            String str = scanner.next();
+            if (Ships.regexMatching(str, 3)) {
+                String[] twoCoordinates = str.split(";");
+                System.out.println(Arrays.toString(twoCoordinates));
+                List<Integer> coordinate = new ArrayList<>();
+                for (String coordinates : twoCoordinates) {
+                    String[] array = coordinates.split(",");
+                    coordinate.add(Integer.parseInt(array[0]));
+                    coordinate.add(Integer.parseInt(array[1]));
+                }
+                if (creatorArrays(coordinate)) {
+                    if (playingField[coordinate.get(0)][coordinate.get(1)].contains(Ships.getDefaultValue()) &&
+                            playingField[coordinate.get(2)][coordinate.get(3)].contains(Ships.getDefaultValue()) &&
+                            playingField[coordinate.get(4)][coordinate.get(5)].contains(Ships.getDefaultValue())) {
+                        tripleDeckShip = new TripleDeckShip(coordinate.get(0), coordinate.get(1), coordinate.get(2), coordinate.get(3), coordinate.get(4), coordinate.get(5));
+                        shipAdder(tripleDeckShip);
+                        count++;
+                    }
+                }
+            }
+        }
+        count = 0;
+        getPlayingField(playingField);
+    }
+
+    private static void addQuadDeckShip() {
+        while (count < 1) {
+            scanner = new Scanner(System.in);
+            if (count == 0) System.out.println("Введите координаты первого четырёхпалубного корабля: ");
+            else System.out.println("Количество однопалубных кораблей должно быть 1");
+
+            String str = scanner.next();
+            if (Ships.regexMatching(str, 4)) {
+                String[] twoCoordinates = str.split(";");
+                System.out.println(Arrays.toString(twoCoordinates));
+                List<Integer> coordinate = new ArrayList<>();
+                for (String coordinates : twoCoordinates) {
+                    String[] array = coordinates.split(",");
+                    coordinate.add(Integer.parseInt(array[0]));
+                    coordinate.add(Integer.parseInt(array[1]));
+                }
+                if (creatorArrays(coordinate)) {
+                    if (playingField[coordinate.get(0)][coordinate.get(1)].contains(Ships.getDefaultValue()) &&
+                            playingField[coordinate.get(2)][coordinate.get(3)].contains(Ships.getDefaultValue()) &&
+                            playingField[coordinate.get(4)][coordinate.get(5)].contains(Ships.getDefaultValue()) &&
+                            playingField[coordinate.get(6)][coordinate.get(7)].contains(Ships.getDefaultValue())
+                    ) {
+                        quadDeckShip = new QuadDeckShip(coordinate.get(0), coordinate.get(1), coordinate.get(2), coordinate.get(3), coordinate.get(4), coordinate.get(5), coordinate.get(6), coordinate.get(7));
+                        shipAdder(quadDeckShip);
+
+                        count++;
+                    }
+                }
+            }
+        }
+        count = 0;
+        getPlayingField(playingField);
+    }
 
     private static void shipAdder(Ships ship) {
         for (int[] coordinate : ship.getCoordinate()) {
@@ -123,7 +188,35 @@ public class PlayingField {
         }
     }
 
-    //    private int addSingleDeckShip(String[][] playingField) {
+    private static boolean creatorArrays(List<Integer> coordinate) {
+        arrayX = new ArrayList<>();
+        arrayY = new ArrayList<>();
+
+        for (int i = 0; i < coordinate.size(); i++) {
+            if (i % 2 == 0) {
+                arrayX.add(coordinate.get(i));
+            } else arrayY.add(coordinate.get(i));
+        }
+
+        return checker(arrayX) && checker(arrayY);
+    }
+
+    private static boolean checker(List<Integer> coordinate) {
+        boolean check = false;
+
+        for (int i = 1; i < coordinate.size(); i++) {
+            if (coordinate.get(i) == coordinate.get(i - 1)) {
+                check = true;
+            } else check = (coordinate.get(i - 1) == (coordinate.get(i) - 1)) ||
+                    (i < coordinate.size() - 1 && (coordinate.get(i - 1) == (coordinate.get(i) + 1)));
+        }
+
+        return check;
+    }
+}
+
+
+//    private int addSingleDeckShip(String[][] playingField) {
 //        scanner = new Scanner(System.in);
 //        System.out.println("Введите координаты однопалубного корабля");
 //        String str = scanner.next();
@@ -257,30 +350,7 @@ public class PlayingField {
 //        return 0;
 //    }
 //
-    private static boolean creatorArrays(List<Integer> coordinate) {
-        arrayX = new ArrayList<>();
-        arrayY = new ArrayList<>();
-        System.out.println( arrayX + " " + arrayY);
-        for (int i = 0; i < coordinate.size(); i++) {
-            if (i % 2 == 0) {
-                arrayX.add(coordinate.get(i));
-            } else arrayY.add(coordinate.get(i));
-        }
 
-        return checker(arrayX) && checker(arrayY);
-    }
-
-    private static boolean checker(List<Integer> coordinate) {
-        boolean check = false;
-
-        for (int i = 1; i < coordinate.size(); i++) {
-            if (coordinate.get(i) == coordinate.get(i - 1)) {
-                check = true;
-            } else if ((coordinate.get(i - 1) == (coordinate.get(i) - 1)) ||
-                    (i < coordinate.size() - 1 && (coordinate.get(i - 1) == (coordinate.get(i) + 1)))) {
-                check = true;
-            } else check = false;
-        }
 
 //            for (int i = 2; i < coordinate.size(); i++) {
 //                if (i % 2 == 0) {
@@ -312,8 +382,3 @@ public class PlayingField {
 //            }
 
 
-        return check;
-    }
-
-
-}

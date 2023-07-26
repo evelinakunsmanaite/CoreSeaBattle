@@ -38,7 +38,6 @@ public class DoubleDeckShip extends Ships {
 
     public void setArea() {
         areaList = new ArrayList<>();
-        List<int []> shipArray;
 
         for (int[] coordinate : doubleDeckShipArray) {
             int x = coordinate[0];
