@@ -27,8 +27,6 @@ public class SingleDeckShip extends Ships {
 
     public void setArea() {
         areaList = new ArrayList<>();
-        Set<int[]> shipCoordinatesSet = new HashSet<>();
-        Collections.addAll(shipCoordinatesSet, singleDeckShipArray);
 
         for (int[] coordinate : singleDeckShipArray) {
             int x = coordinate[0];

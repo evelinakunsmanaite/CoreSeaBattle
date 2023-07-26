@@ -56,8 +56,6 @@ public class QuadDeckShip extends Ships {
 
     public void setArea() {
         areaList = new ArrayList<>();
-        Set<int[]> shipCoordinatesSet = new HashSet<>();
-        Collections.addAll(shipCoordinatesSet, quadDeckShipArray);
 
         for (int[] coordinate : quadDeckShipArray) {
             int x = coordinate[0];
@@ -66,11 +64,18 @@ public class QuadDeckShip extends Ships {
             for (int i = x - 1; i <= x + 1; i++) {
                 for (int j = y - 1; j <= y + 1; j++) {
                     if ((i >= 0 && j >= 0) && (i < 10 && j < 10)) {
-                        if (i != x || j != y) {
-                            int[] area = {i, j};
+                        int[] area = {i, j};
+                        boolean isShipCoordinate = false;
+
+                        for (int[] shipCoordinate : quadDeckShipArray) {
+                            if (i == shipCoordinate[0] && j == shipCoordinate[1]) {
+                                isShipCoordinate = true;
+                                break;
+                            }
+                        }
+                        if (!isShipCoordinate) {
                             areaList.add(area);
                         }
-
                     }
                 }
             }

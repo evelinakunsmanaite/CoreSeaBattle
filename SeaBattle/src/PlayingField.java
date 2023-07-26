@@ -12,9 +12,14 @@ public class PlayingField {
     private static DoubleDeckShip doubleDeckShip;
     private static TripleDeckShip tripleDeckShip;
     private static QuadDeckShip quadDeckShip;
+    private static List<Integer> arrayY;
+    private static List<Integer> arrayX;
+
 
     public static void playingFieldCreator() {
+        System.out.println("    0   1   2   3   4    5   6   7   8   9");
         for (int i = 0; i < playingField.length; i++) {
+            System.out.print(i + "  ");
             for (int j = 0; j < playingField[i].length; j++) {
                 playingField[i][j] = Ships.getDefaultValue();
                 System.out.print(playingField[i][j] + "  ");
@@ -23,12 +28,15 @@ public class PlayingField {
         }
         System.out.println("Поздравляю, ваше поле создано! Теперь давай его заполним)");
         addSingleDeckShip();
+        addDoubleDeckShip();
     }
 
     private static void getPlayingField(String[][] playingField) {
-        for (String[] strings : playingField) {
-            for (String string : strings) {
-                System.out.print(string + "  ");
+        System.out.println("    0   1   2   3   4   5    6   7   8   9");
+        for (int i = 0; i < playingField.length; i++) {
+            System.out.print(i + "  ");
+            for (int j = 0; j < playingField[i].length; j++) {
+                System.out.print(playingField[i][j] + "  ");
             }
             System.out.println();
         }
@@ -68,6 +76,39 @@ public class PlayingField {
         getPlayingField(playingField);
     }
 
+    private static void addDoubleDeckShip() {
+        while (count < 3) {
+            scanner = new Scanner(System.in);
+            switch (count) {
+                case 0 -> System.out.println("Введите координаты первого двухпалубного корабля: ");
+                case 1 -> System.out.println("Введите координаты второго двухпалубного корабля: ");
+                case 2 -> System.out.println("Введите координаты третьего двухпалубного корабля: ");
+                default -> System.out.println("Количество однопалубных кораблей должно быть 4");
+            }
+            String str = scanner.next();
+            if (Ships.regexMatching(str, 2)) {
+                String[] twoCoordinates = str.split(";");
+                System.out.println(Arrays.toString(twoCoordinates));
+                List<Integer> coordinate = new ArrayList<>();
+                for (String coordinates : twoCoordinates) {
+                    String[] array = coordinates.split(",");
+                    coordinate.add(Integer.parseInt(array[0]));
+                    coordinate.add(Integer.parseInt(array[1]));
+                }
+                if (creatorArrays(coordinate)) {
+                    doubleDeckShip = new DoubleDeckShip(coordinate.get(0), coordinate.get(1), coordinate.get(2), coordinate.get(3));
+                    shipAdder(doubleDeckShip);
+
+                    count++;
+                } else addDoubleDeckShip();
+
+            } else addDoubleDeckShip();
+        }
+        count = 0;
+        getPlayingField(playingField);
+    }
+
+
     private static void shipAdder(Ships ship) {
         for (int[] coordinate : ship.getCoordinate()) {
             int x = coordinate[0];
@@ -82,7 +123,7 @@ public class PlayingField {
         }
     }
 
-//    private int addSingleDeckShip(String[][] playingField) {
+    //    private int addSingleDeckShip(String[][] playingField) {
 //        scanner = new Scanner(System.in);
 //        System.out.println("Введите координаты однопалубного корабля");
 //        String str = scanner.next();
@@ -216,60 +257,63 @@ public class PlayingField {
 //        return 0;
 //    }
 //
-//    private boolean creatorArrays(List<Integer> coordinate) {
-//        for (int i = 0; i < coordinate.size(); i++) {
-//            if (i % 2 == 0) {
-//                arrayX.add(coordinate.get(i));
-//            } else arrayY.add(coordinate.get(i));
-//        }
-//
-//        return checker(arrayX) && checker(arrayY);
-//    }
-//
-//    private boolean checker(List<Integer> coordinate) {
-//        boolean check = false;
-//
-//        for (int i = 1; i < coordinate.size(); i++) {
-//            if (coordinate.get(i) == coordinate.get(i - 1)) {
-//                check = true;
-//            } else if ((coordinate.get(i - 1) == (coordinate.get(i) - 1)) ||
-//                    (i < coordinate.size() - 1 && (coordinate.get(i - 1) == (coordinate.get(i) + 1)))) {
-//                check = true;
-//            } else check = false;
-//        }
-//
-////            for (int i = 2; i < coordinate.size(); i++) {
-////                if (i % 2 == 0) {
-////                    if (coordinate.get(i) == coordinate.get((i - 2 + coordinate.size())%coordinate.size())) {
-////                        if (i == 2) {
-////                            arrayX.add(coordinates[0]);
-////                        }
-////                        arrayX.add(coordinates[i]);
-////                        for (int j = 1; j < coordinates.length; j++) {
-////                            if (j % 2 != 0) {
-////                                if ((coordinates[j] == (coordinates[j - 1] + 1)) ||
-////                                        (coordinates[j] == (coordinates[j - 1] - 1))) {
-////                                    arrayY.add(coordinates[j]);
-////                                } else check = false;
-////                            }
-////                        }
-////                    } else check = false;
-////                } else {
-////                    if (coordinates[i] == coordinates[i - 2]) {
-////                        if (i == 3) {
-////                            arrayY.add(coordinates[1]);
-////                        }
-////                        arrayY.add(coordinates[i]);
-////                        //x
-////                    } else {
-////                        check = false;
-////                    }
-////                }
-////            }
-//
-//
-//        return check;
-//    }
+    private static boolean creatorArrays(List<Integer> coordinate) {
+        arrayX = new ArrayList<>();
+        arrayY = new ArrayList<>();
+        System.out.println( arrayX + " " + arrayY);
+        for (int i = 0; i < coordinate.size(); i++) {
+            if (i % 2 == 0) {
+                arrayX.add(coordinate.get(i));
+            } else arrayY.add(coordinate.get(i));
+        }
+
+        return checker(arrayX) && checker(arrayY);
+    }
+
+    private static boolean checker(List<Integer> coordinate) {
+        boolean check = false;
+
+        for (int i = 1; i < coordinate.size(); i++) {
+            if (coordinate.get(i) == coordinate.get(i - 1)) {
+                check = true;
+            } else if ((coordinate.get(i - 1) == (coordinate.get(i) - 1)) ||
+                    (i < coordinate.size() - 1 && (coordinate.get(i - 1) == (coordinate.get(i) + 1)))) {
+                check = true;
+            } else check = false;
+        }
+
+//            for (int i = 2; i < coordinate.size(); i++) {
+//                if (i % 2 == 0) {
+//                    if (coordinate.get(i) == coordinate.get((i - 2 + coordinate.size())%coordinate.size())) {
+//                        if (i == 2) {
+//                            arrayX.add(coordinates[0]);
+//                        }
+//                        arrayX.add(coordinates[i]);
+//                        for (int j = 1; j < coordinates.length; j++) {
+//                            if (j % 2 != 0) {
+//                                if ((coordinates[j] == (coordinates[j - 1] + 1)) ||
+//                                        (coordinates[j] == (coordinates[j - 1] - 1))) {
+//                                    arrayY.add(coordinates[j]);
+//                                } else check = false;
+//                            }
+//                        }
+//                    } else check = false;
+//                } else {
+//                    if (coordinates[i] == coordinates[i - 2]) {
+//                        if (i == 3) {
+//                            arrayY.add(coordinates[1]);
+//                        }
+//                        arrayY.add(coordinates[i]);
+//                        //x
+//                    } else {
+//                        check = false;
+//                    }
+//                }
+//            }
+
+
+        return check;
+    }
 
 
 }

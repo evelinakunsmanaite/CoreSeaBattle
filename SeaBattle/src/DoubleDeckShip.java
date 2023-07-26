@@ -12,6 +12,7 @@ public class DoubleDeckShip extends Ships {
         this.x2 = x2;
         this.y2 = y2;
         doubleDeckShipArray = new int[][]{{x1, y1}, {x2, y2}};
+        setArea();
     }
 
     public int getX1() {
@@ -37,8 +38,7 @@ public class DoubleDeckShip extends Ships {
 
     public void setArea() {
         areaList = new ArrayList<>();
-        Set<int[]> shipCoordinatesSet = new HashSet<>();
-        Collections.addAll(shipCoordinatesSet, doubleDeckShipArray);
+        List<int []> shipArray;
 
         for (int[] coordinate : doubleDeckShipArray) {
             int x = coordinate[0];
@@ -47,11 +47,18 @@ public class DoubleDeckShip extends Ships {
             for (int i = x - 1; i <= x + 1; i++) {
                 for (int j = y - 1; j <= y + 1; j++) {
                     if ((i >= 0 && j >= 0) && (i < 10 && j < 10)) {
-                        if (i != x || j != y) {
-                            int[] area = {i, j};
+                        int[] area = {i, j};
+                        boolean isShipCoordinate = false;
+
+                        for (int[] shipCoordinate : doubleDeckShipArray) {
+                            if (i == shipCoordinate[0] && j == shipCoordinate[1]) {
+                                isShipCoordinate = true;
+                                break;
+                            }
+                        }
+                        if (!isShipCoordinate) {
                             areaList.add(area);
                         }
-
                     }
                 }
             }
