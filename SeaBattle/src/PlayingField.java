@@ -16,7 +16,7 @@ public class PlayingField {
     private static List<Integer> arrayX;
 
 
-    public static void playingFieldCreator() {
+    public void playingFieldCreator() {
         System.out.println("    0   1   2   3   4    5   6   7   8   9");
         for (int i = 0; i < playingField.length; i++) {
             System.out.print(i + "  ");
@@ -213,8 +213,17 @@ public class PlayingField {
 
         return check;
     }
-}
 
+    public String[][] getPlayingField() {
+        return playingField;
+    }
+
+//    public void getShoot (int x, int y, PlayingField playingFieldSecond){
+//    if (playingFieldSecond) {
+//
+//    }
+
+}
 
 //    private int addSingleDeckShip(String[][] playingField) {
 //        scanner = new Scanner(System.in);
